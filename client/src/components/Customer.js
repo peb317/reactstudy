@@ -7,11 +7,17 @@ class Customer extends Component {
         return (
             <TableRow>
                 <TableCell>{this.props.id}</TableCell>
-                <TableCell><img src={this.props.img} /></TableCell>
-                <TableCell>{this.props.name}</TableCell>
-                <TableCell>{this.props.birthday}</TableCell>
-                <TableCell>{this.props.gender}</TableCell>
-                <TableCell>{this.props.job}</TableCell>
+                <TableCell>
+                    { this.props.imgPath != null ? (
+                        <img src={this.props.imgPath} />
+                    ) : (
+                        <img src={this.props.img} />
+                    )}
+                </TableCell>
+                <TableCell>{this.props.subject}</TableCell>
+                <TableCell>{this.props.content}</TableCell>
+                <TableCell>{this.props.description}</TableCell>
+                <TableCell>{this.props.created_uid}</TableCell>
             </TableRow>
         )
     };

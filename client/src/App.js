@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Customer from './components/Customer';
+import CustomerAdd from './components/CustomerAdd';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
@@ -28,21 +29,40 @@ const styles = theme => ({
 
 class App extends Component {
 
-  state = {
-    customers: "",
-    complated: 0,
+  constructor(props) {
+    super(props);
+    this.state = {
+      customers: '',
+      complated: 0
+    }
   }
+
+  stateRefresh = () => {
+    this.setState({
+      customers: '',
+      complated: 0
+    });
+    Axios({
+      url: "http://localhost:8000/api/post",
+      method: "post"
+    }).then( ({ data:cData }) => {
+      console.log("post Data > ", cData);
+      this.setState({customers:cData});
+    }).catch( error => {
+      console.log(error);
+    });
+  }  
 
   componentDidMount() {
     this.timer = setInterval(this.progress, 20);
     Axios({
-      url: "http://localhost:5000/api/customers",
-      method: "get"
+      url: "http://localhost:8000/api/post",
+      method: "post"
     }).then( ({ data:cData }) => {
-      console.log('test > ', cData);
-        this.setState({customers:cData});
+      console.log("post Data > ", cData);
+      this.setState({customers:cData});
     }).catch( error => {
-        console.log(error);
+      console.log(error);
     });
   }
 
@@ -54,31 +74,34 @@ class App extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Paper className={classes.root}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell>번호</TableCell>
-              <TableCell>사진</TableCell>
-              <TableCell>이름</TableCell>
-              <TableCell>생년월일</TableCell>
-              <TableCell>성별</TableCell>
-              <TableCell>직업</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            { this.state.customers ? this.state.customers.map((c, i) => { 
-              return (<Customer id={c.id} img={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} key={i} />) 
-            }) : 
+      <div>
+        <Paper className={classes.root}>
+          <Table className={classes.table}>
+            <TableHead>
               <TableRow>
-                <TableCell colSpan="6" align="center">
-                  <CircularProgress className={classes.progress} value={this.state.complated} />
-                </TableCell>
+                <TableCell>번호</TableCell>
+                <TableCell>사진</TableCell>
+                <TableCell>제목</TableCell>
+                <TableCell>내용</TableCell>
+                <TableCell>설명</TableCell>
+                <TableCell>작성자</TableCell>
               </TableRow>
-            }
-          </TableBody>
-        </Table>
-      </Paper>
+            </TableHead>
+            <TableBody>
+              { this.state.customers ? this.state.customers.map((c, i) => { 
+                return (<Customer id={c.id} img="https://placeimg.com/64/64/any" imgPath={c.imgPath} subject={c.subject} content={c.content} description={c.description} created_uid={c.created_uid} key={i} />) 
+              }) : 
+                <TableRow>
+                  <TableCell colSpan="6" align="center">
+                    <CircularProgress className={classes.progress} value={this.state.complated} />
+                  </TableCell>
+                </TableRow>
+              }
+            </TableBody>
+          </Table>
+        </Paper>
+        <CustomerAdd stateRefresh={this.stateRefresh}/>
+      </div>
     );
   }
 }
