@@ -85,11 +85,12 @@ class App extends Component {
                 <TableCell>내용</TableCell>
                 <TableCell>설명</TableCell>
                 <TableCell>작성자</TableCell>
+                <TableCell>설정</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               { this.state.customers ? this.state.customers.map((c, i) => { 
-                return (<Customer id={c.id} img="https://placeimg.com/64/64/any" imgPath={c.imgPath} subject={c.subject} content={c.content} description={c.description} created_uid={c.created_uid} key={i} />) 
+                return (<Customer id={c.id} img="https://placeimg.com/64/64/any" imgPath={c.imgPath} subject={c.subject} content={c.content} description={c.description} created_uid={c.created_uid} key={i} stateRefresh={this.stateRefresh} />) 
               }) : 
                 <TableRow>
                   <TableCell colSpan="6" align="center">
